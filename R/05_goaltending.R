@@ -130,7 +130,7 @@ p_board <- ggplot(pwhl_board, aes(gsax, goalie)) +
   geom_text(aes(label = scales::number(gsax, accuracy = 0.1),
                 hjust = if_else(gsax > 0, -0.2, 1.2)),
             size = 3.3, color = "grey25") +
-  scale_fill_manual(values = c(`TRUE` = "#eb6834", `FALSE` = "grey70"), guide = "none") +
+  scale_fill_manual(values = c(`TRUE` = league_colors[["PWHL"]], `FALSE` = "grey70"), guide = "none") +
   scale_x_continuous(expand = expansion(mult = 0.15)) +
   labs(
     title    = "PWHL goalies: goals saved above expected",

@@ -17,7 +17,7 @@ dir.create("data", showWarnings = FALSE)
 dir.create("figures", showWarnings = FALSE)
 dir.create("output", showWarnings = FALSE)
 
-league_colors <- c(NHL = "#2a78d6", PWHL = "#eb6834")
+league_colors <- c(NHL = "#FF4C00", PWHL = "#200256")
 
 theme_project <- function(base_size = 13) {
   theme_minimal(base_size = base_size) +
