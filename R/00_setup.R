@@ -9,6 +9,10 @@ suppressPackageStartupMessages({
 # The PWHL's first season was 2023-24, so 2024 is the earliest season for both leagues.
 seasons <- 2024:2026
 
+# The NHL play-by-play files are large; R's default 60-second download timeout
+# is too short and makes load_nhl_pbp() silently return an empty table.
+options(timeout = max(1800, getOption("timeout")))
+
 dir.create("data", showWarnings = FALSE)
 dir.create("figures", showWarnings = FALSE)
 dir.create("output", showWarnings = FALSE)
