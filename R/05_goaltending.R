@@ -1,16 +1,21 @@
 # Section 4: goaltending
 #
 # Raw save % depends on how hard the shots were, so this section also builds a
-# simple expected-goals model from shot distance, then measures each goalie's
-# goals saved above expected (GSAx):
+# simple expected-goals model from shot distance, angle and type, then measures
+# each goalie's goals saved above expected (GSAx):
 #
-#   xG for a shot = that league's goal rate for shots from that distance
+#   xG for a shot = that league's goal rate for shots like it
 #   GSAx          = expected goals against - actual goals against
 
 source("R/00_setup.R")
 
 shots <- readRDS("data/shots.rds") |>
-  filter(!empty_net, !is.na(goalie_id), goalie_id != "0", !is.na(distance))
+  filter(!empty_net, !is.na(goalie_id), goalie_id != "0", !is.na(distance)) |>
+  add_shot_features() |>
+  # A few dozen NHL shots have no type; fold them into "Other" so the NHL model
+  # doesn't get a near-empty category. PWHL "Unknown" (~30% of shots) stays.
+  mutate(type_group = if_else(league == "NHL" & type_group == "Unknown",
+                              factor("Other", levels(type_group)), type_group))
 
 # ---- League save % ----------------------------------------------------------
 
@@ -22,19 +27,24 @@ league_sv <- shots |>
 league_sv
 write_csv(league_sv, "output/league_save_pct.csv")
 
-# ---- Simple expected-goals model by distance ---------------------------------
-# Logistic regression on distance (with a squared term for the curve), fit
-# separately for each league so each goalie is compared with her/his own league.
+# ---- Simple expected-goals model ---------------------------------------------
+# Logistic regression on distance (with a squared term for the curve), angle and
+# shot type, fit separately for each league so each goalie is compared with
+# her/his own league.
 #
-#   P(goal) = 1 / (1 + exp(-(b0 + b1*distance + b2*distance^2)))
+#   P(goal) = 1 / (1 + exp(-(b0 + b1*distance + b2*distance^2 + b3*angle + b_type)))
 
-fit_xg <- function(df) glm(goal ~ distance + I(distance^2), data = df, family = binomial)
+fit_xg <- function(df) {
+  glm(goal ~ distance + I(distance^2) + angle + type_group,
+      data = mutate(df, type_group = fct_drop(type_group)), family = binomial)
+}
 
 shots <- shots |>
   group_by(league) |>
   group_modify(\(df, key) {
     model <- fit_xg(df)
-    df |> mutate(xg = predict(model, newdata = df, type = "response"))
+    df |> mutate(xg = predict(model, newdata = mutate(df, type_group = fct_drop(type_group)),
+                              type = "response"))
   }) |>
   ungroup()
 
@@ -111,7 +121,7 @@ p_spread <- ggplot(qualified, aes(gsax_per_100, league, color = league)) +
     subtitle = paste0("Goals saved above expected per 100 shots, goalies with ",
                       min_shots, "+ shots faced (2023-24 to 2025-26)"),
     x = "GSAx per 100 shots (right = better)", y = NULL,
-    caption  = paste(data_caption, "Expected goals from a distance-only model.")
+    caption  = paste(data_caption, "Expected goals from a distance, angle and shot-type model.")
   ) +
   theme_project() +
   theme(panel.grid.major.y = element_blank())
@@ -136,7 +146,7 @@ p_board <- ggplot(pwhl_board, aes(gsax, goalie)) +
     title    = "PWHL goalies: goals saved above expected",
     subtitle = paste0("Goalies with ", min_shots, "+ shots faced, 2023-24 to 2025-26"),
     x = "Goals saved above expected", y = NULL,
-    caption  = paste(data_caption, "Expected goals from a distance-only model.")
+    caption  = paste(data_caption, "Expected goals from a distance, angle and shot-type model.")
   ) +
   theme_project() +
   theme(panel.grid.major.y = element_blank())

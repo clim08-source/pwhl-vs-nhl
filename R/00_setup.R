@@ -38,3 +38,29 @@ save_fig <- function(plot, name, width = 9, height = 5.5) {
 }
 
 data_caption <- "Data: PWHL (HockeyTech) and NHL APIs via fastRhockey. Regular season, 2023-24 to 2025-26."
+
+# Adds shot angle and a shot-type group that means the same thing in both leagues.
+#   angle: degrees off the line straight out from the net (0 = dead centre,
+#          90 = level with the goal line, over 90 = from behind the net)
+#   type_group: the two leagues label shot types differently. Wrist and snap are
+#          combined because scorers separate them inconsistently; tips and
+#          deflections are combined because the PWHL only records "tip".
+#          About 30% of PWHL shots have no recorded type ("default"); these are
+#          kept as "Unknown".
+add_shot_features <- function(shots) {
+  shots |>
+    mutate(
+      angle      = atan2(abs(y), 89 - x) * 180 / pi,
+      type_group = case_when(
+        shot_type %in% c("wrist", "snap")                 ~ "Wrist/snap",
+        shot_type == "slap"                               ~ "Slap",
+        shot_type == "backhand"                           ~ "Backhand",
+        shot_type %in% c("tip", "tip-in", "deflected")    ~ "Tip/deflection",
+        shot_type %in% c("bat", "between-legs", "cradle",
+                         "poke", "wrap-around")           ~ "Other",
+        TRUE                                              ~ "Unknown"
+      ),
+      type_group = factor(type_group, c("Wrist/snap", "Slap", "Backhand",
+                                        "Tip/deflection", "Other", "Unknown"))
+    )
+}
