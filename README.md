@@ -30,6 +30,10 @@ every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
 - **Goalies vary about as much.** After adjusting for shot distance, angle and type, the
   spread between the best and worst goalies is similar in both leagues.
 
+![Goals per game](figures/01_goals_per_game.png)
+
+![How games end](figures/02_game_endings.png)
+
 ![League-wide rates](figures/03_league_rates.png)
 
 ![Shot locations](figures/06_shot_maps.png)
@@ -41,6 +45,8 @@ every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
 ![Shooting % by angle and distance](figures/13_shooting_by_angle.png)
 
 ![Shooting % by shot type](figures/12_shooting_by_type.png)
+
+![Goalie spread](figures/09_goalie_spread.png)
 
 ## Project structure
 
