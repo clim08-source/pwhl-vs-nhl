@@ -73,11 +73,12 @@ p_map <- geom_hockey("nhl", display_range = "offense") +
   geom_hex(data = hex_counts, aes(x = x, y = y, weight = weight),
            binwidth = c(4, 4), alpha = 0.85) +
   facet_wrap(~league) +
-  scale_fill_gradient(low = "#cde2fb", high = "#0d366b",
-                      labels = scales::percent, name = "Share of shots") +
+  scale_fill_gradient(low = "#f2f7fd", high = "#0d366b", limits = c(0, 0.03),
+                      oob = scales::squish, labels = scales::percent,
+                      name = "Share of shots") +
   labs(
     title    = "Shot locations, PWHL vs NHL",
-    subtitle = "Each hexagon shows the share of that league's shots on goal taken from that spot",
+    subtitle = "Each hexagon shows the share of that league's shots taken from that spot (darkest = 3% or more)",
     caption  = data_caption
   ) +
   theme(

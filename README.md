@@ -29,6 +29,11 @@ every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
   (8.8% vs 11.5%) account for the difference.
 - **Goalies vary about as much.** After adjusting for shot distance, angle and type, the
   spread between the best and worst goalies is similar in both leagues.
+- **Shooters matter more than goalies.** Within each league, the typical
+  difference between shooters is about 1.9 percentage points of shooting %,
+  while the typical difference between goalies is 0.5 (NHL) and 0.6 (PWHL).
+  Who takes the shot matters far more than who stops it. This doesn't say
+  how much of the league gap is shooting vs goaltending (see Methods).
 
 ![Goals per game](figures/01_goals_per_game.png)
 
@@ -48,6 +53,8 @@ every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
 
 ![Goalie spread](figures/09_goalie_spread.png)
 
+![Shooters vs goalies](figures/15_shooters_vs_goalies.png)
+
 ## Project structure
 
 ```
@@ -59,6 +66,7 @@ R/
   04_shot_maps.R     shot location maps, shooting % by distance
   05_goaltending.R   save %, expected goals model, goals saved above expected
   06_shot_quality.R  shot type and angle, PWHL shots scored at NHL rates
+  07_shooters_vs_goalies.R  shooter and goalie effects, which matters more
 run_all.R            runs everything in order
 figures/             saved charts
 output/              summary tables (CSV)
@@ -68,7 +76,7 @@ output/              summary tables (CSV)
 
 1. Install the packages:
    ```r
-   install.packages(c("tidyverse", "fastRhockey", "sportyR", "hexbin"))
+   install.packages(c("tidyverse", "fastRhockey", "sportyR", "hexbin", "lme4"))
    ```
 2. Open this folder in Positron (or RStudio) and run `source("run_all.R")`.
    The first run downloads about three seasons of NHL play-by-play and takes a
@@ -103,6 +111,16 @@ output/              summary tables (CSV)
   Adding angle and type barely changes goalie rankings compared with a
   distance-only model (correlation above 0.98 in both leagues). The model still
   ignores rebounds, rushes and screens, so treat it as a rough adjustment.
+- **Shooters vs goalies.** Each league gets one logistic model: shot distance,
+  angle and type, plus a random effect for each shooter and each goalie. Random
+  effects are estimated as deviations from the league average and shrunk toward
+  zero for players with few shots. The chart reports the spread of each effect,
+  converted to percentage points of shooting %. The model shows which side varies
+  more *within* a league. It **cannot** split the league-wide gap (7.8% vs 9.9%)
+  into shooting and goaltending: adding a constant to every shooter and
+  subtracting it from every goalie gives identical predictions. That split needs
+  an outside benchmark. Rebounds, screens and team effects are not modelled, so
+  shooter effects may partly reflect them.
 - **PWHL coordinate cleanup.** In a few PWHL games, a team's shots for a period
   are recorded at the wrong end of the rink. These are flipped back in
   `01_load_data.R`.

@@ -57,6 +57,7 @@ pwhl_shots <- pwhl_pbp |>
     is_home    = team_id == home_team_id,
     goalie_id  = as.character(goalie_id),
     goalie     = str_squish(paste(goalie_first, goalie_last)),
+    shooter_id = as.character(player_id),
     x          = x_coord_right,
     y          = y_coord_right,
     shot_type  = str_to_lower(event_type),
@@ -97,7 +98,7 @@ nhl_events <- map(seasons, \(s) {
            event_type %in% c("SHOT", "GOAL", "PENALTY", "PERIOD_START")) |>
     select(game_id, season, event_type, event_team_type, period, period_type,
            x_fixed, y_fixed, secondary_type, event_goalie_id, event_goalie_name,
-           empty_net, extra_attacker, home_skaters, away_skaters, penalty_severity) |>
+           event_player_1_id, empty_net, extra_attacker, home_skaters, away_skaters, penalty_severity) |>
     # column types differ slightly between seasons' files, so standardise them
     mutate(
       season = as.integer(s),
@@ -147,6 +148,7 @@ nhl_shots <- nhl_events |>
     is_home,
     goalie_id  = as.character(event_goalie_id),
     goalie     = event_goalie_name,
+    shooter_id = as.character(event_player_1_id),
     x, y,
     shot_type  = secondary_type,
     goal       = event_type == "GOAL",

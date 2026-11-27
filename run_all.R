@@ -10,7 +10,8 @@ scripts <- c(
   "R/03_rates.R",
   "R/04_shot_maps.R",
   "R/05_goaltending.R",
-  "R/06_shot_quality.R"
+  "R/06_shot_quality.R",
+  "R/07_shooters_vs_goalies.R"
 )
 
 for (s in scripts) {

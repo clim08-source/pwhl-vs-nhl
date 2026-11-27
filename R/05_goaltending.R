@@ -121,12 +121,12 @@ p_spread <- ggplot(qualified, aes(gsax_per_100, league, color = league)) +
     subtitle = paste0("Goals saved above expected per 100 shots, goalies with ",
                       min_shots, "+ shots faced (2023-24 to 2025-26)"),
     x = "GSAx per 100 shots (right = better)", y = NULL,
-    caption  = paste(data_caption, "Expected goals from a distance, angle and shot-type model.")
+    caption  = paste0(data_caption, "\nExpected goals from a distance, angle and shot-type model.")
   ) +
   theme_project() +
-  theme(panel.grid.major.y = element_blank())
+  theme(panel.grid.major.y = element_blank(), plot.caption = element_text(hjust = 0))
 
-save_fig(p_spread, "09_goalie_spread", height = 4.5)
+save_fig(p_spread, "09_goalie_spread", height = 4.8)
 
 # ---- Figure: PWHL goalie leaderboard ----------------------------------------
 
