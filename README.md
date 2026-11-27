@@ -20,13 +20,13 @@ every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
 - **It isn't shot angle or shot type either.** PWHL shots come from slightly
   more central angles (54% within 30° of straight on, vs 47% in the NHL), and
   the shot mix is similar. Scored at NHL conversion rates for their distance,
-  angle and type, PWHL shots would go in 10.6% of the time, slightly above the
-  NHL's actual 10.0%. The whole gap is in finishing (or goaltending), not shot
+  angle and type, PWHL shots would go in 10.8% of the time, slightly above the
+  NHL's actual 10.3%. The whole gap is in finishing (or goaltending), not shot
   selection.
 - **The gap is in close and mid-range wrist shots and backhands.** Slap shots
   and tips go in at nearly the same rate in both leagues, and beyond 40 feet
-  the two leagues are level. Wrist/snap shots (7.0% vs 9.6%) and backhands
-  (8.8% vs 11.5%) account for the difference.
+  the two leagues are level. Wrist/snap shots (7.0% vs 9.9%) and backhands
+  (8.8% vs 11.9%) account for the difference.
 - **Goalies vary about as much.** After adjusting for shot distance, angle and type, the
   spread between the best and worst goalies is similar in both leagues.
 - **Shooters matter more than goalies.** Within each league, the typical
@@ -80,7 +80,8 @@ output/              summary tables (CSV)
    ```
 2. Open this folder in Positron (or RStudio) and run `source("run_all.R")`.
    The first run downloads about three seasons of NHL play-by-play and takes a
-   few minutes. The data is saved to `data/` (not in the repo).
+   few minutes. The data is saved to `data/`. The NHL feed is occasionally
+   revised, so a fresh download can shift results slightly.
 
 ## Methods and caveats
 
