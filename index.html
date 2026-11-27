@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PWHL vs NHL: Same shots, fewer goals</title>
+  <meta name="description" content="Every regular-season PWHL and NHL game from 2023-24 to 2025-26, compared shot by shot. Both leagues shoot as often from the same places; fewer PWHL shots go in.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap wide">
+    <a class="wordmark" href="./"><span>PWHL</span> vs NHL</a>
+    <nav aria-label="Site">
+      <a href="./" aria-current="page">Findings</a>
+      <a href="methods.html">Methods</a>
+      <a href="https://github.com/clim08-source/pwhl-vs-nhl">Code</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">Regular seasons 2023-24 to 2025-26</p>
+      <h1>Same shots.<br>Fewer goals.</h1>
+      <p class="dek">The PWHL and the NHL put the same number of pucks on net, from the
+        same parts of the ice. Women's pro hockey scores less because fewer of those
+        shots go in.</p>
+
+      <div class="boxscore" role="region" aria-label="Key numbers" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">League</th>
+              <th scope="col">Goals<br>per game</th>
+              <th scope="col">Shots on goal<br>per team, per 60</th>
+              <th scope="col">Shooting %</th>
+              <th scope="col">Save %</th>
+              <th scope="col">One-goal<br>games</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="swatch pwhl" aria-hidden="true"></span>PWHL</th>
+              <td>4.7</td><td>27.4</td><td>7.8%</td><td>.921</td><td>50%</td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="swatch nhl" aria-hidden="true"></span>NHL</th>
+              <td>6.1</td><td>28.4</td><td>9.9%</td><td>.900</td><td>40%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">282 PWHL games and 3,936 NHL games. Shots are shots on goal; rates use regulation time.</p>
+    </div>
+  </section>
+
+  <div class="findings">
+    <div class="wrap">
+
+      <section class="finding" id="scoring">
+        <header>
+          <div class="num">01</div>
+          <div>
+            <h2>Lower scoring, closer games</h2>
+            <p>PWHL games average 4.7 goals to the NHL's 6.1. Half are decided by one
+              goal (NHL: 40%), and 27% go past regulation (NHL: 22%).</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/01_goals_per_game.png" width="2700" height="1650" loading="lazy"
+               alt="Bar chart of the share of games by total goals. PWHL games cluster at 3 to 5 goals; NHL games spread further, with many more games of 7 or more goals.">
+        </figure>
+      </section>
+
+      <section class="finding" id="volume">
+        <header>
+          <div class="num">02</div>
+          <div>
+            <h2>Both leagues shoot just as often</h2>
+            <p>Over the three seasons, teams in both leagues averaged 27 to 28 shots on
+              goal every 60 minutes, so the gap isn't about how much teams shoot.</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/03_league_rates.png" width="2700" height="1650" loading="lazy"
+               alt="Five small line charts by season. Shots per 60 are nearly identical in both leagues; goals per 60 and shooting percentage are lower for the PWHL every season; penalties and power-play share are similar.">
+        </figure>
+      </section>
+
+      <section class="finding" id="distance">
+        <header>
+          <div class="num">03</div>
+          <div>
+            <h2>Close-in shots go in less often</h2>
+            <p>A third of shots in both leagues come from within 20 feet, but PWHL
+              shots convert less at every distance up to 40 feet. Beyond that, the
+              leagues are level.</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/04_shooting_by_distance.png" width="2700" height="1650" loading="lazy"
+               alt="Line chart of shooting percentage by distance. The NHL line sits above the PWHL line from 0 to 40 feet, about 19% vs 17% at 0 to 10 feet; the lines meet beyond 40 feet.">
+        </figure>
+      </section>
+
+      <section class="finding" id="quality">
+        <header>
+          <div class="num">04</div>
+          <div>
+            <h2>The shots aren't worse</h2>
+            <p>If PWHL shots went in as often as NHL shots from the same distance, angle
+              and shot type, they'd score 10.8% of the time. That's slightly more than the
+              NHL's actual 10.3%. The gap is in finishing or goaltending, not shot selection.</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/14_shot_quality_gap.png" width="2700" height="1500" loading="lazy"
+               alt="Dot chart. PWHL actual shooting is 7.6 to 8.0%; the same PWHL shots at NHL conversion rates would be 10.7 to 10.8%, above the NHL's actual 10.3%.">
+        </figure>
+      </section>
+
+      <section class="finding" id="type">
+        <header>
+          <div class="num">05</div>
+          <div>
+            <h2>Wrist shots and backhands make the gap</h2>
+            <p>Slap shots and tips go in at about the same rate in both leagues. PWHL
+              wrist shots (7.0% vs 9.9%) and backhands (8.8% vs 11.9%) don't.</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/12_shooting_by_type.png" width="2700" height="1650" loading="lazy"
+               alt="Dot chart of shooting percentage by shot type with confidence intervals. Slap shots and tips overlap between leagues; PWHL wrist shots and backhands are clearly lower than the NHL's.">
+        </figure>
+      </section>
+
+      <section class="finding" id="players">
+        <header>
+          <div class="num">06</div>
+          <div>
+            <h2>The shooter matters more than the goalie</h2>
+            <p>Within each league, after adjusting for shot quality, shooters differ
+              from one another three to four times as much as goalies do.</p>
+          </div>
+        </header>
+        <figure>
+          <img src="figures/15_shooters_vs_goalies.png" width="2400" height="1650" loading="lazy"
+               alt="Bar chart. The typical difference between shooters is about 1.9 percentage points in both leagues; between goalies it is 0.5 points in the NHL and 0.6 in the PWHL.">
+        </figure>
+      </section>
+
+    </div>
+  </div>
+
+  <section class="caveat">
+    <div class="wrap">
+      <h2>Read with care</h2>
+      <p>The PWHL has played far fewer games, so its numbers are less precise. The data
+        also can't say how much of the league-wide gap belongs to shooters and how much
+        to goalies, only which one varies more within a league.</p>
+      <p><a href="methods.html">How the numbers were made</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Data: PWHL (HockeyTech) and NHL play-by-play via
+      <a href="https://fastRhockey.sportsdataverse.org/">fastRhockey</a>.
+      Rinks drawn with <a href="https://sportyR.sportsdataverse.org/">sportyR</a>.</p>
+    <p>Code and data: <a href="https://github.com/clim08-source/pwhl-vs-nhl">github.com/clim08-source/pwhl-vs-nhl</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

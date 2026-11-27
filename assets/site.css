@@ -1,0 +1,150 @@
+/* PWHL vs NHL: site styles.
+   Colours match the charts: PWHL purple #200256, NHL orange #FF4C00. */
+
+:root {
+  --ink: #17131f;
+  --muted: #5a5466;
+  --rule: #dedae4;
+  --paper: #ffffff;
+  --tint: #f4f2f7;
+  --pwhl: #200256;
+  --nhl: #ff4c00;
+  --link: #3a1f8f;
+  --head: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--pwhl); text-decoration-thickness: 2px; }
+
+.wrap { max-width: 46rem; margin: 0 auto; padding-inline: 1.25rem; }
+.wrap.wide { max-width: 62rem; }
+
+/* ---- Top bar --------------------------------------------------------- */
+
+.topbar { border-top: 6px solid var(--pwhl); border-bottom: 1px solid var(--rule); }
+.topbar .wrap {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+  align-items: baseline; justify-content: space-between;
+  padding-block: 0.8rem;
+}
+.wordmark {
+  font-family: var(--head); font-weight: 700; font-size: 1.25rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+}
+.wordmark span { color: var(--pwhl); }
+.topbar nav { display: flex; gap: 1.25rem; font-family: var(--head);
+  font-size: 1.05rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.topbar nav a { color: var(--muted); text-decoration: none; }
+.topbar nav a:hover, .topbar nav a[aria-current="page"] { color: var(--pwhl); }
+.topbar nav a[aria-current="page"] { border-bottom: 2px solid var(--pwhl); }
+
+/* ---- Hero ------------------------------------------------------------ */
+
+.hero { padding-block: 3rem 2rem; }
+.kicker {
+  font-family: var(--head); font-weight: 600; font-size: 1rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--pwhl);
+  margin: 0 0 0.5rem;
+}
+h1 {
+  font-family: var(--head); font-weight: 700;
+  font-size: clamp(2.75rem, 8vw, 4.75rem); line-height: 0.95;
+  letter-spacing: -0.01em; margin: 0 0 1.25rem; text-transform: uppercase;
+}
+.dek { font-size: 1.3rem; line-height: 1.5; margin: 0; max-width: 38rem; }
+
+/* ---- Box score ------------------------------------------------------- */
+
+.boxscore { margin-block: 2rem 0.5rem; overflow-x: auto; }
+.boxscore table {
+  width: 100%; border-collapse: collapse; font-family: var(--head);
+  font-variant-numeric: tabular-nums; min-width: 32rem;
+}
+.boxscore th, .boxscore td { padding: 0.55rem 0.75rem; text-align: right; }
+.boxscore thead th {
+  background: var(--pwhl); color: #fff; font-weight: 600; font-size: 0.95rem;
+  letter-spacing: 0.06em; text-transform: uppercase; vertical-align: bottom;
+  line-height: 1.15;
+}
+.boxscore thead th:first-child, .boxscore tbody th { text-align: left; }
+.boxscore tbody th { font-weight: 700; font-size: 1.15rem; letter-spacing: 0.04em;
+  white-space: nowrap; }
+.boxscore tbody td { font-size: 1.6rem; font-weight: 600; }
+.boxscore tbody tr { border-bottom: 1px solid var(--rule); }
+.boxscore tbody tr:first-child { background: var(--tint); }
+.swatch { display: inline-block; width: 0.7em; height: 0.7em; margin-right: 0.45em;
+  vertical-align: 0.05em; }
+.swatch.pwhl { background: var(--pwhl); }
+.swatch.nhl { background: var(--nhl); }
+.note { font-size: 0.95rem; color: var(--muted); margin: 0.5rem 0 0; }
+
+/* ---- Findings -------------------------------------------------------- */
+
+.findings { padding-block: 1rem 2rem; }
+.finding { border-top: 1px solid var(--rule); padding-block: 2.5rem 1rem; }
+.finding header { display: grid; grid-template-columns: 3.5rem 1fr; column-gap: 0.75rem; }
+.num {
+  font-family: var(--head); font-weight: 700; font-size: 2.6rem; line-height: 1;
+  color: var(--pwhl); font-variant-numeric: tabular-nums;
+}
+.finding h2 {
+  font-family: var(--head); font-weight: 700; font-size: 2rem; line-height: 1.05;
+  margin: 0 0 0.6rem; text-transform: uppercase; letter-spacing: 0.01em;
+}
+.finding p { margin: 0; grid-column: 2; }
+.finding figure { margin: 1.75rem 0 0; }
+.finding figure img { width: 100%; border: 1px solid var(--rule); }
+
+@media (max-width: 34rem) {
+  .finding header { grid-template-columns: 1fr; }
+  .finding p { grid-column: 1; }
+  .num { font-size: 2rem; margin-bottom: 0.25rem; }
+}
+
+/* ---- Caveat strip and footer ----------------------------------------- */
+
+.caveat { border-top: 3px solid var(--ink); padding-block: 1.5rem 3rem; }
+.caveat h2 { font-family: var(--head); font-size: 1.4rem; text-transform: uppercase;
+  letter-spacing: 0.04em; margin: 0 0 0.5rem; }
+.caveat p { margin: 0 0 0.75rem; }
+
+footer { border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.95rem; }
+footer .wrap { padding-block: 1.5rem 2.5rem; }
+footer p { margin: 0 0 0.4rem; }
+
+/* ---- Methods page ---------------------------------------------------- */
+
+.prose { padding-block: 2.5rem 3rem; }
+.prose h1 { font-size: clamp(2.5rem, 7vw, 3.75rem); }
+.prose h2 {
+  font-family: var(--head); font-weight: 700; font-size: 1.6rem; line-height: 1.1;
+  text-transform: uppercase; letter-spacing: 0.02em;
+  border-top: 1px solid var(--rule); padding-top: 1.75rem; margin: 2.25rem 0 0.75rem;
+}
+.prose p, .prose li { max-width: 40rem; }
+.prose li + li { margin-top: 0.4rem; }
+.prose code { font-size: 0.9em; background: var(--tint); padding: 0.05em 0.3em; }
+.prose .math { overflow-x: auto; padding-block: 0.25rem; }
+.toc { font-family: var(--head); text-transform: uppercase; letter-spacing: 0.04em;
+  font-size: 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem;
+  padding: 0; margin: 1.5rem 0 0; list-style: none; }
+.toc li + li { margin-top: 0; }
+.toc a { color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--pwhl); }

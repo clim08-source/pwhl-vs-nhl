@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methods · PWHL vs NHL</title>
+  <meta name="description" content="Data, definitions and models behind the PWHL vs NHL comparison.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap wide">
+    <a class="wordmark" href="./"><span>PWHL</span> vs NHL</a>
+    <nav aria-label="Site">
+      <a href="./">Findings</a>
+      <a href="methods.html" aria-current="page">Methods</a>
+      <a href="https://github.com/clim08-source/pwhl-vs-nhl">Code</a>
+    </nav>
+  </div>
+</div>
+
+<main class="prose">
+  <div class="wrap">
+    <p class="kicker">Methods</p>
+    <h1>How the numbers were made</h1>
+    <p class="dek">Every regular-season game from 2023-24 (the PWHL's first season) to
+      2025-26: 282 PWHL games and 3,936 NHL games.</p>
+    <ul class="toc">
+      <li><a href="#data">Data</a></li>
+      <li><a href="#definitions">Definitions</a></li>
+      <li><a href="#shot-quality">Shot quality</a></li>
+      <li><a href="#goalies">Goalies</a></li>
+      <li><a href="#shooters-goalies">Shooters vs goalies</a></li>
+      <li><a href="#limits">Limits</a></li>
+      <li><a href="#reproduce">Reproduce</a></li>
+    </ul>
+
+    <h2 id="data">Data</h2>
+    <p>Play-by-play and schedules come from the PWHL (HockeyTech) and NHL APIs, through
+      the <a href="https://fastRhockey.sportsdataverse.org/">fastRhockey</a> R package.
+      Rinks are drawn with <a href="https://sportyR.sportsdataverse.org/">sportyR</a>.
+      Both leagues play on NHL-sized rinks, so one rink template fits both.</p>
+    <p>In a few PWHL games, one team's shots for a whole period are recorded at the
+      wrong end of the rink. They have normal shooting percentages, so they are
+      mis-recorded rather than real long-range shots, and they are flipped back.</p>
+
+    <h2 id="definitions">Definitions</h2>
+    <ul>
+      <li><strong>Shots</strong> means shots on goal (saves plus goals). The PWHL
+        doesn't publish missed or blocked shots, so this is the fairest measure both
+        leagues share.</li>
+      <li><strong>Rates</strong> use regulation time only, so every game counts for
+        exactly 60 minutes.</li>
+      <li><strong>Shot distance</strong> is measured from the centre of the net, with
+        the goal line 89 feet from centre ice:
+        <div class="math">\[ d = \sqrt{(89 - x)^2 + y^2} \]</div></li>
+      <li><strong>Shot angle</strong> is degrees off the line straight out from the net,
+        so 0° is dead centre and 90° is level with the goal line:
+        <div class="math">\[ \theta = \arctan\!\left(\frac{|y|}{89 - x}\right) \]</div>
+        Wide-angle shots tend to be taken close to the net, so shooting % by angle is
+        compared within distance bands.</li>
+      <li><strong>Shot types</strong> are grouped so they mean the same thing in both
+        leagues. Wrist and snap shots are combined because scorers split them
+        inconsistently. Tips and deflections are combined because the PWHL only records
+        "tip". About 30% of PWHL shots have no recorded type (46% in 2023-24, 21% in
+        2025-26). Those shots go in more often than PWHL wrist shots, so they aren't a
+        random sample, and they're left out of shot-type comparisons rather than guessed at.</li>
+    </ul>
+
+    <h2 id="shot-quality">Shot quality: PWHL shots at NHL rates</h2>
+    <p>To test whether PWHL teams take worse shots, a logistic regression is fit on NHL
+      shots only, using distance, distance squared, angle and (optionally) shot type:</p>
+    <div class="math">\[ P(\text{goal}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 d + \beta_2 d^2 + \beta_3 \theta + \beta_{\text{type}})}} \]</div>
+    <p>Its predictions are then averaged over PWHL shots. The result answers one question:
+      if these exact shots went in as often as similar NHL shots, what would PWHL shooting
+      % be? The answer is 10.8%, slightly above the NHL's own actual rate of 10.3%.</p>
+
+    <h2 id="goalies">Goalies: goals saved above expected</h2>
+    <p>The same model form is fit separately for each league, so each goalie is compared
+      with their own league. A shot's expected-goal value (xG) is its predicted
+      probability of going in. For each goalie:</p>
+    <div class="math">\[ \text{GSAx} = \sum \text{xG against} - \text{goals against} \]</div>
+    <p>It is shown per 100 shots so goalies with different workloads share a scale, for
+      goalies who faced at least 500 shots. Adding angle and type barely changes the
+      rankings compared with a distance-only model (correlation above 0.98 in both
+      leagues).</p>
+
+    <h2 id="shooters-goalies">Shooters vs goalies</h2>
+    <p>Each league gets one logistic model with shot distance, angle and type, plus a
+      random effect for every shooter \(s\) and every goalie \(g\):</p>
+    <div class="math">\[ \operatorname{logit} P(\text{goal}) = \beta_0 + \beta_1 d + \beta_2 d^2 + \beta_3 \theta + \beta_{\text{type}} + u_s + v_g \]</div>
+    <div class="math">\[ u_s \sim N(0, \sigma_u^2), \qquad v_g \sim N(0, \sigma_v^2) \]</div>
+    <p>Random effects are estimated as deviations from the league average and pulled
+      toward zero for players with few shots. The spreads \(\sigma_u\) and \(\sigma_v\)
+      are converted from log-odds to percentage points at the league's average shooting
+      %, \(\bar p\), using \(100\,\bar p(1-\bar p)\,\sigma\).</p>
+    <p>Result: shooters vary by about 1.9 points in both leagues; goalies by 0.5 (NHL)
+      and 0.6 (PWHL). Fit with <code>lme4::glmer</code>.</p>
+    <p><strong>What this can't do:</strong> it can't split the league-wide gap into
+      shooting and goaltending. Adding a constant to every shooter and subtracting it from
+      every goalie gives identical predictions, so the data can't tell them apart. That
+      split would need an outside benchmark.</p>
+
+    <h2 id="limits">Limits</h2>
+    <ul>
+      <li><strong>Sample size.</strong> 282 PWHL games vs 3,936 NHL games. PWHL estimates
+        are much less precise; charts show 95% confidence intervals where relevant.</li>
+      <li><strong>What the models leave out.</strong> Rebounds, rush chances, screens and
+        passes before the shot aren't in the data for both leagues. Shooter effects may
+        partly reflect them, so treat expected goals as a rough adjustment.</li>
+      <li><strong>Data revisions.</strong> The NHL feed is occasionally revised, so a
+        fresh download can shift results slightly.</li>
+    </ul>
+
+    <h2 id="reproduce">Reproduce</h2>
+    <p>Install the packages:</p>
+    <p><code>install.packages(c("tidyverse", "fastRhockey", "sportyR", "hexbin", "lme4"))</code></p>
+    <p>Then open the project folder in Positron or RStudio and run
+      <code>source("run_all.R")</code>. The first run downloads about three seasons of
+      NHL play-by-play and takes a few minutes. Charts are saved to <code>figures/</code>
+      and summary tables to <code>output/</code>; this site reads the charts directly.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><a href="./">Back to the findings</a></p>
+    <p>Code and data: <a href="https://github.com/clim08-source/pwhl-vs-nhl">github.com/clim08-source/pwhl-vs-nhl</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

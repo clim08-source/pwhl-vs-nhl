@@ -5,6 +5,8 @@ League across scoring, league-wide rates, shot locations, shot types and angles,
 and goaltending, using
 every regular-season game from 2023-24 (the PWHL's first season) to 2025-26.
 
+**Read the short version:** <https://clim08-source.github.io/pwhl-vs-nhl/>
+
 ## Key findings
 
 - **Lower scoring, tighter games.** PWHL games average 4.7 goals compared with
@@ -70,7 +72,19 @@ R/
 run_all.R            runs everything in order
 figures/             saved charts
 output/              summary tables (CSV)
+index.html           website: headline findings
+methods.html         website: data, definitions and models
+assets/site.css      website styles
 ```
+
+## Website
+
+`index.html` and `methods.html` are a plain static site that reads its charts
+straight from `figures/`, so rerunning the R scripts updates it. There's no
+build step. To publish it with GitHub Pages: on GitHub, go to **Settings →
+Pages**, set **Source** to **Deploy from a branch**, pick the branch, and set
+the folder to **/ (root)**. The `.nojekyll` file tells GitHub to serve the files
+as they are.
 
 ## How to run
 
